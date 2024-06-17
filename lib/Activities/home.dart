@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Home',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       home: const Home(),
     );
@@ -27,6 +28,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final List<String> imgList = [
+    'https://via.placeholder.com/600x400.png?text=Sample+Image+1',
+    'https://via.placeholder.com/600x400.png?text=Sample+Image+2',
+    'https://via.placeholder.com/600x400.png?text=Sample+Image+3',
+    'https://via.placeholder.com/600x400.png?text=Sample+Image+4',
+    'https://via.placeholder.com/600x400.png?text=Sample+Image+5',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +50,7 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-        backgroundColor: Color.fromARGB(255, 33, 208, 243),
+        backgroundColor: Colors.amber,
         actions: [
           IconButton(
             icon: Icon(Icons.notifications),
@@ -51,33 +60,46 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16.0),
-        crossAxisSpacing: 16.0,
-        mainAxisSpacing: 16.0,
+      body: Column(
         children: [
-          _buildGridItem(Icons.school, 'Courses', Colors.blue),
-          _buildGridItem(Icons.receipt, 'Test Series', Colors.green),
-          _buildGridItem(Icons.book, 'Book Store', Colors.orange),
-          _buildGridItem(Icons.book_online, 'E-Books', Colors.red),
-          _buildGridItem(Icons.quiz, 'Quiz', Colors.purple),
-          _buildGridItem(
-              Icons.assignment_turned_in, 'Free Weekly Tests', Colors.teal),
-          _buildGridItem(
-              Icons.video_collection, 'Youtube Videos', Colors.amber),
-          _buildGridItem(
-              Icons.library_books, 'Free Study Material', Colors.cyan),
-          _buildGridItem(Icons.menu_book, 'Syllabus', Colors.pink),
+          _buildCarousel(),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              padding: const EdgeInsets.all(16.0),
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
+              children: [
+                _buildGridItem(Icons.receipt, 'Custom Tests', Colors.green),
+                _buildGridItem(Icons.quiz, 'Practice', Colors.purple),
+                _buildGridItem(Icons.assignment_turned_in, 'Syllabus', Colors.teal),
+                _buildGridItem(Icons.support_agent, 'Support', Colors.teal),
+              ],
+            ),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add functionality here
-          print('Button Pressed!');
-        },
-        child: Icon(Icons.add),
+    );
+  }
+
+  Widget _buildCarousel() {
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: 200.0,
+        autoPlay: true,
+        aspectRatio: 16 / 9,
+        enlargeCenterPage: true,
       ),
+      items: imgList.map((item) => Container(
+        margin: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          image: DecorationImage(
+            image: NetworkImage(item),
+            fit: BoxFit.cover,
+          ),
+        ),
+      )).toList(),
     );
   }
 

@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:atpapp/Activities/home.dart';
-// import 'package:atpapp/Activities/LoginPage.dart';
-import 'package:atpapp/Activities/test.dart';
-import 'package:atpapp/Activities/practice.dart';
-import 'package:atpapp/Activities/chapters.dart';
-import 'package:atpapp/Activities/marks.dart';
-import 'package:atpapp/Activities/questions.dart';
-import 'package:atpapp/topics.dart';
+import 'package:your_app_name/Activities/chapters.dart';
+import 'package:your_app_name/Activities/home.dart';
+import 'package:your_app_name/Activities/login.dart';
+import 'package:your_app_name/Activities/marks.dart';
+import 'package:your_app_name/Activities/practice.dart';
+import 'package:your_app_name/Activities/questions.dart';
+import 'package:your_app_name/Activities/test.dart';
+import 'package:your_app_name/Activities/topics.dart';
 
 void main() {
   runApp(MaterialApp(
-    routes: {
-      // "/": (context) => LoginPage(),
-      "/home": (context) => Home(),
-      "/test": (context) => test(),
-      "/practice": (context) => Practice(),
-      "/topics": (context) => topics(),
-      "/chapters": (context) => chapters(),
-      "/questions": (context) => questions(),
-      "/pMarks": (context) => Marks(),
-    },
+      home: Login(),
+
+
+    // routes: {
+    //   "/": (context) => LoginPage(),
+    //   "/home": (context) => Home(),
+    //   "/test": (context) => test(),
+    //   "/practice": (context) => Practice(),
+    //   "/topics": (context) => topics(),
+    //   "/chapters": (context) => chapters(),
+    //   "/questions": (context) => questions(),
+    //   "/pMarks": (context) => Marks(),
+    // },
   ));
 }
