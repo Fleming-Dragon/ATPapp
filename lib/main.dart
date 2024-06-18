@@ -10,7 +10,7 @@ import 'package:your_app_name/Activities/topics.dart';
 
 void main() {
   runApp(MaterialApp(
-      home: Login(),
+      home: Home(),
 
 
     // routes: {

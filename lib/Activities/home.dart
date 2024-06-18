@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:your_app_name/Activities/topics.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,7 +47,7 @@ class _HomeState extends State<Home> {
           children: [
             Text('ATP', style: TextStyle(fontSize: 18)),
             Text(
-              'Hello, Rushikesh Rajapure',
+              'Welcome, Aspirant..',
               style: TextStyle(fontSize: 12),
             ),
           ],
@@ -71,9 +73,16 @@ class _HomeState extends State<Home> {
               mainAxisSpacing: 16.0,
               children: [
                 _buildGridItem(Icons.receipt, 'Custom Tests', Colors.green),
-                _buildGridItem(Icons.quiz, 'Practice', Colors.purple),
+                _buildGridItem(Icons.quiz, 'Practice', Colors.purple, onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Topics()),
+                  );
+                }),
                 _buildGridItem(Icons.assignment_turned_in, 'Syllabus', Colors.teal),
-                _buildGridItem(Icons.support_agent, 'Support', Colors.teal),
+                _buildGridItem(Icons.support_agent, 'Support', Colors.teal, onTap: () {
+                  _launchURL('https://wa.me/9011167740');
+                }),
               ],
             ),
           ),
@@ -103,9 +112,9 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildGridItem(IconData icon, String title, Color color) {
+  Widget _buildGridItem(IconData icon, String title, Color color, {VoidCallback? onTap}) {
     return InkWell(
-      onTap: () {
+      onTap: onTap ?? () {
         // Handle tap on the grid item
         print('$title pressed');
       },
@@ -130,5 +139,13 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
