@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "118982449925",
+    "project_id": "new-atp",
+    "storage_bucket": "new-atp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118982449925:android:9a6f9c8d327bd9f90a756c",
+        "android_client_info": {
+          "package_name": "com.example.atpapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4OWfBTUENntQDVk7S8x-TvbEOEoJgRF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
