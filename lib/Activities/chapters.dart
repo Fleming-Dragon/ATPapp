@@ -1,4 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:your_app_name/Activities/questions.dart';
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MyChaptersScreen(),
+    );
+  }
+}
+
+class MyChaptersScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Chapters'),
+        backgroundColor: Colors.amber,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChaptersScreen(topic: 'Acts'),
+                  ),
+                );
+              },
+              child: Text('Acts'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChaptersScreen(topic: 'Theory'),
+                  ),
+                );
+              },
+              child: Text('Theory'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class ChaptersScreen extends StatelessWidget {
   final String topic;
@@ -33,8 +87,17 @@ class ChaptersScreen extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 10.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle chapter button press
-                      print('${chapters[index]} pressed');
+                      if (index == 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => questions(),
+                          ),
+                        );
+                      } else {
+                        // Handle other chapter button press if needed
+                        print('${chapters[index]} pressed');
+                      }
                     },
                     child: Text(chapters[index]),
                     style: ElevatedButton.styleFrom(
@@ -57,9 +120,9 @@ class ChaptersScreen extends StatelessWidget {
   List<String> _getChapters(String topic) {
     switch (topic) {
       case 'Acts':
-        return List.generate(30, (index) => 'Acts Chapter ${index + 1}');
+        return List.generate(2, (index) => 'Acts Chapter ${index + 1}');
       case 'Theory':
-        return List.generate(30, (index) => 'Theory Chapter ${index + 1}');
+        return List.generate(2, (index) => 'Theory Chapter ${index + 1}');
       default:
         return [];
     }
