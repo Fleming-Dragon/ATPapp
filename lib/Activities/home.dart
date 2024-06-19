@@ -2,25 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:your_app_name/Activities/topics.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Home',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
-      home: const Home(),
-    );
-  }
-}
+import 'package:google_sign_in/google_sign_in.dart';
+import 'login.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -38,6 +21,20 @@ class _HomeState extends State<Home> {
     'https://via.placeholder.com/600x400.png?text=Sample+Image+5',
   ];
 
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignInAccount? _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        _currentUser = account;
+      });
+    });
+    _googleSignIn.signInSilently();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,20 +42,26 @@ class _HomeState extends State<Home> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('ATP', style: TextStyle(fontSize: 18)),
+            const Text('ATP', style: TextStyle(fontSize: 18)),
             Text(
-              'Welcome, Aspirant..',
-              style: TextStyle(fontSize: 12),
+              _currentUser != null
+                  ? 'Welcome, ${_currentUser!.displayName}'
+                  : 'Welcome, Aspirant..',
+              style: const TextStyle(fontSize: 12),
             ),
           ],
         ),
         backgroundColor: Colors.amber,
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {
               // Add notification functionality here
             },
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _confirmLogout,
           ),
         ],
       ),
@@ -100,7 +103,7 @@ class _HomeState extends State<Home> {
         enlargeCenterPage: true,
       ),
       items: imgList.map((item) => Container(
-        margin: EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(5.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           image: DecorationImage(
@@ -128,7 +131,7 @@ class _HomeState extends State<Home> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50, color: color),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               title,
               style: TextStyle(
@@ -147,5 +150,93 @@ class _HomeState extends State<Home> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<void> _confirmLogout() async {
+    final bool? shouldLogout = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldLogout == true) {
+      await _handleSignOut();
+    } else {
+      _showStayMessage(); // Show the stay message
+    }
+  }
+
+  Future<void> _handleSignOut() async {
+    _showLoadingDialog(); // Show loading dialog
+    try {
+      await _googleSignIn.signOut();
+      Navigator.of(context).pop(); // Hide loading dialog
+      setState(() {
+        _currentUser = null;
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } catch (error) {
+      Navigator.of(context).pop(); // Hide loading dialog
+      print(error);
+    }
+  }
+
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: SizedBox(
+            height: 50,
+            width: 50,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showStayMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // title: const Text('Stay Logged In'),
+          title: const Text('Thank you for staying!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
