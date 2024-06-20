@@ -10,7 +10,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -19,98 +19,233 @@ class _LoginPageState extends State<LoginPage> {
   final _registerEmailController = TextEditingController();
   final _registerPasswordController = TextEditingController();
   final _registerConfirmPasswordController = TextEditingController();
-  bool _isRegistering = false; // To track registration
+  bool _isRegistering = false;
+
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _registerEmailController.dispose();
+    _registerPasswordController.dispose();
+    _registerConfirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-          backgroundColor: Colors.amber,
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Sign In'),
-              Tab(text: 'Register'),
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: SingleChildScrollView(
+            child: FadeTransition(
+              opacity: _animation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Top Illustration
+                  Image.asset(
+                    "assets/images/logo.png",
+                    width: 150,
+                    height: 150,
+                  ),
+                  const SizedBox(height: 30),
+                  // Welcome Text
+                  const Text(
+                    'Hello',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Welcome to Tasky, where you manage your daily tasks',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 40),
+                  // Login Button
+                  ElevatedButton(
+                    onPressed: () => _showLoginDialog(context),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(220, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Sign Up Button
+                  OutlinedButton(
+                    onPressed: () => _showRegisterDialog(context),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(220, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      side: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                    ),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Social Media Sign Up
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: IconButton(
+                          icon: Image.asset(
+                            'assets/images/google_icon.png',
+                            width: 40,
+                            height: 40,
+                          ),
+                          onPressed: _handleGoogleSignIn,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Function to show login dialog
+  void _showLoginDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Login',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _handleEmailSignIn();
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text('Sign In'),
+              ),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            _buildSignInForm(),
-            _buildRegisterForm(),
-          ],
-        ),
       ),
     );
   }
 
-  Widget _buildSignInForm() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _handleEmailSignIn,
-              child: const Text('Sign in with Email'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _handleGoogleSignIn,
-              child: const Text('Sign in with Google'),
-            ),
-          ],
+  // Function to show register dialog
+  void _showRegisterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),
-    );
-  }
-
-  Widget _buildRegisterForm() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _registerEmailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            TextField(
-              controller: _registerPasswordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: _registerConfirmPasswordController,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _handleRegistration,
-              child: _isRegistering
-                  ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              )
-                  : const Text('Register'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Register',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _registerEmailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _registerPasswordController,
+                decoration: const InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _registerConfirmPasswordController,
+                decoration: const InputDecoration(labelText: 'Confirm Password'),
+                obscureText: true,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _handleRegistration();
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: _isRegistering
+                    ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    strokeWidth: 2.0,
+                  ),
+                )
+                    : const Text('Register'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -118,8 +253,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleEmailSignIn() async {
     _showLoadingDialog(); // Show loading dialog
-    final email = _emailController.text;
-    final password = _passwordController.text;
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
 
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -142,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (error) {
       Navigator.of(context).pop(); // Hide loading dialog if error occurs
-      _showErrorDialog(error.toString()); // Show error dialog
+      _showErrorDialog(_parseErrorMessage(error));
     }
   }
 
@@ -178,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (error) {
       Navigator.of(context).pop(); // Hide loading dialog if error occurs
-      _showErrorDialog(error.toString()); // Show error dialog
+      _showErrorDialog(_parseErrorMessage(error));
     }
   }
 
@@ -187,9 +322,9 @@ class _LoginPageState extends State<LoginPage> {
       _isRegistering = true;
     });
 
-    final email = _registerEmailController.text;
-    final password = _registerPasswordController.text;
-    final confirmPassword = _registerConfirmPasswordController.text;
+    final email = _registerEmailController.text.trim();
+    final password = _registerPasswordController.text.trim();
+    final confirmPassword = _registerConfirmPasswordController.text.trim();
 
     if (password != confirmPassword) {
       _showErrorDialog('Passwords do not match');
@@ -218,7 +353,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } catch (error) {
-      _showErrorDialog(error.toString()); // Show error dialog
+      _showErrorDialog(_parseErrorMessage(error));
     }
 
     setState(() {
@@ -231,12 +366,20 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return const AlertDialog(
-          content: SizedBox(
-            height: 50,
-            width: 50,
-            child: Center(
-              child: CircularProgressIndicator(),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: SizedBox(
+              height: 60,
+              width: 60,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
           ),
         );
@@ -248,19 +391,55 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Error',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                Text(message),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: const Text('OK'),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
+  }
+
+  String _parseErrorMessage(dynamic error) {
+    if (error is FirebaseAuthException) {
+      switch (error.code) {
+        case 'user-not-found':
+          return 'No user found for that email.';
+        case 'wrong-password':
+          return 'Wrong password provided.';
+        case 'email-already-in-use':
+          return 'The email is already registered.';
+        default:
+          return 'Please try again with correct email or password';
+      }
+    }
+    return error.toString();
   }
 }
