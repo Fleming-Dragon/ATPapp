@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:your_app_name/Activities/topics.dart';
+import 'package:your_app_name/Activities/chapters.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'login.dart';
 

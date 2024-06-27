@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:your_app_name/Activities/chapters.dart';
 import 'package:your_app_name/Activities/login.dart';
 
 void main() async {
