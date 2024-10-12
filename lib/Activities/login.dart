@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:your_app_name/Activities/chapters.dart';
 import 'home.dart';
 
 class LoginPage extends StatefulWidget {
@@ -106,8 +107,8 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: _handleRegistration,
               child: _isRegistering
                   ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              )
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
                   : const Text('Register'),
             ),
           ],
@@ -155,7 +156,8 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop(); // Hide loading dialog if canceled
         return; // Canceled sign in
       }
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
         accessToken: googleAuth.accessToken,
@@ -167,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const Home(),
+          pageBuilder: (context, animation1, animation2) => MyApp(),
           transitionsBuilder: (context, animation1, animation2, child) {
             return FadeTransition(
               opacity: animation1,
@@ -200,7 +202,8 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );

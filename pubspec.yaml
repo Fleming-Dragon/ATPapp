@@ -19,19 +19,29 @@ dependencies:
   url_launcher: ^6.0.9
   sign_in_button: ^3.0.0
   shared_preferences: any
-
+  syncfusion_flutter_pdf: ^24.2.9
+  file_picker: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
+   
     - assets/images/logo.png
     - assets/images/google_icon.png
+
+
+
+flutter_icons:
+  android: true  # Enable for Android
+  ios: false      # Enable for iOS
+  image_path: "assets/images/logo.png" # Path to your app icon
 
   #   - images/a_dot_ham.jpeg
 

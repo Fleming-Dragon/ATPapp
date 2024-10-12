@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:your_app_name/Activities/questions.dart';
+import 'package:your_app_name/Activities/Tests/questions.dart';
+import 'package:your_app_name/Activities/Tests/questions2.dart';
+import 'package:your_app_name/Activities/Tests/questions3.dart';
+import 'package:your_app_name/Activities/Tests/questions4.dart';
+import 'package:your_app_name/Activities/Tests/questions5.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -61,7 +66,7 @@ class ChaptersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> chapters = _getChapters(topic);
+    List<Widget> chapterButtons = _getChapterButtons(context, topic);
 
     return Scaffold(
       appBar: AppBar(
@@ -75,56 +80,61 @@ class ChaptersScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16.0),
-              itemCount: chapters.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (index == 0) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => questions(),
-                          ),
-                        );
-                      } else {
-                        // Handle other chapter button press if needed
-                        print('${chapters[index]} pressed');
-                      }
-                    },
-                    child: Text(chapters[index]),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      textStyle: const TextStyle(fontSize: 18),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
+        child: Center(
+          child: Column(
+            children: chapterButtons,
+          ),
         ),
       ),
     );
   }
 
-  List<String> _getChapters(String topic) {
-    switch (topic) {
-      case 'Acts':
-        return List.generate(2, (index) => 'Acts Chapter ${index + 1}');
-      case 'Theory':
-        return List.generate(2, (index) => 'Theory Chapter ${index + 1}');
-      default:
-        return [];
+  List<Widget> _getChapterButtons(BuildContext context, String topic) {
+    if (topic == 'Acts') {
+      return [
+        _buildChapterButton(context, 'Regional Plan Rules', questions1()),
+        _buildChapterButton(context, 'Development Plan Rules', questions2()),
+        _buildChapterButton(
+            context, 'Town Planning Scheme Rules', questions3()),
+        _buildChapterButton(context, 'Development Charge Rules', questions4()),
+        _buildChapterButton(
+            context, 'Compounded Structure Rules', questions5()),
+      ];
+    } else if (topic == 'Theory') {
+      return [
+        _buildChapterButton(context, 'Theory Chapter 1', questions1()),
+        _buildChapterButton(context, 'Theory Chapter 2', questions2()),
+      ];
+    } else {
+      return [];
     }
+  }
+
+  Widget _buildChapterButton(
+      BuildContext context, String title, Widget screen) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10.0),
+      child: SizedBox(
+        width: 400,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => screen,
+              ),
+            );
+          },
+          child: Text(title),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            textStyle: const TextStyle(fontSize: 18),
+          ),
+        ),
+      ),
+    );
   }
 }

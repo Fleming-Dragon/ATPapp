@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:your_app_name/Activities/topics.dart';
-import 'package:your_app_name/Activities/chapters.dart';
+import 'package:your_app_name/Activities/test.dart';
+import 'package:your_app_name/Activities/homescreen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'login.dart';
 
@@ -76,17 +77,32 @@ class _HomeState extends State<Home> {
               crossAxisSpacing: 16.0,
               mainAxisSpacing: 16.0,
               children: [
-                _buildGridItem(Icons.receipt, 'Custom Tests', Colors.green),
-                _buildGridItem(Icons.quiz, 'Practice', Colors.purple, onTap: () {
+                _buildGridItem(Icons.receipt, 'Custom Tests', Colors.green,
+                    onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                }),
+                _buildGridItem(Icons.quiz, 'Practice', Colors.purple,
+                    onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const Topics()),
                   );
                 }),
-                _buildGridItem(Icons.assignment_turned_in, 'Syllabus', Colors.teal),
-                _buildGridItem(Icons.support_agent, 'Support', Colors.teal, onTap: () {
+                _buildGridItem(
+                    Icons.assignment_turned_in, 'Syllabus', Colors.teal),
+                _buildGridItem(Icons.support_agent, 'Support', Colors.teal,
+                    onTap: () {
                   _launchURL('https://wa.me/9011167740');
                 }),
+                _buildGridItem(Icons.receipt, 's', Colors.green, onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyApp()),
+                  );
+                })
               ],
             ),
           ),
@@ -103,25 +119,29 @@ class _HomeState extends State<Home> {
         aspectRatio: 16 / 9,
         enlargeCenterPage: true,
       ),
-      items: imgList.map((item) => Container(
-        margin: const EdgeInsets.all(5.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          image: DecorationImage(
-            image: NetworkImage(item),
-            fit: BoxFit.cover,
-          ),
-        ),
-      )).toList(),
+      items: imgList
+          .map((item) => Container(
+                margin: const EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  image: DecorationImage(
+                    image: NetworkImage(item),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
 
-  Widget _buildGridItem(IconData icon, String title, Color color, {VoidCallback? onTap}) {
+  Widget _buildGridItem(IconData icon, String title, Color color,
+      {VoidCallback? onTap}) {
     return InkWell(
-      onTap: onTap ?? () {
-        // Handle tap on the grid item
-        print('$title pressed');
-      },
+      onTap: onTap ??
+          () {
+            // Handle tap on the grid item
+            print('$title pressed');
+          },
       child: Container(
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),

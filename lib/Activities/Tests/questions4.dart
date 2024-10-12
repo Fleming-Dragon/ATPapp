@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:your_app_name/Activities/chapters.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -8,63 +9,83 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: questions(),
+      home: questions4(),
     );
   }
 }
 
-class questions extends StatefulWidget {
+class questions4 extends StatefulWidget {
   @override
   _QuizScreenState createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State<questions> {
+class _QuizScreenState extends State<questions4> {
   final List<Map<String, Object>> _questions = [
     {
-      'questionText': 'What is the capital of France?',
-      'answers': [
-        {'text': 'Berlin', 'score': 0},
-        {'text': 'Madrid', 'score': 0},
-        {'text': 'Paris', 'score': 1},
-        {'text': 'Lisbon', 'score': 0},
-      ],
+      "questionText": "What is the short title of Development Charge Rules?",
+      "answers": [
+        {
+          "text":
+              "Maharashtra Levy, Assessment & Recovery of Development Charge Rules, 1992",
+          "score": 0
+        },
+        {
+          "text":
+              "Maharashtra Levy, Assessment & Recovery of Development Charge Rules, 1994",
+          "score": 1
+        },
+        {
+          "text":
+              "Maharashtra Levy, Assessment & Recovery of Development Charge Rules, 1966",
+          "score": 0
+        },
+        {
+          "text":
+              "Maharashtra Levy, Assessment & Recovery of Development Charge Rules, 1996",
+          "score": 0
+        }
+      ]
     },
     {
-      'questionText': 'What is 2 + 2?',
-      'answers': [
-        {'text': '3', 'score': 0},
-        {'text': '4', 'score': 1},
-        {'text': '5', 'score': 0},
-        {'text': '6', 'score': 0},
-      ],
+      "questionText":
+          "The building or part thereof wherein products or material are fabricated, assembled or processed is called as____",
+      "answers": [
+        {"text": "Institutional Building", "score": 0},
+        {"text": "Industrial Building", "score": 1},
+        {"text": "Commercial Building", "score": 0},
+        {"text": "Residential Building", "score": 0}
+      ]
     },
     {
-      'questionText': 'Who wrote "Hamlet"?',
-      'answers': [
-        {'text': 'Charles Dickens', 'score': 0},
-        {'text': 'William Shakespeare', 'score': 1},
-        {'text': 'Jane Austen', 'score': 0},
-        {'text': 'Mark Twain', 'score': 0},
-      ],
+      "questionText":
+          "What is the Commencement Date for Development Charges applied according to Levy, Assessment & Recovery of Development Charge Rule, 1994?",
+      "answers": [
+        {"text": "10 August 1990", "score": 0},
+        {"text": "10 August 1992", "score": 0},
+        {"text": "10 August 1994", "score": 1},
+        {"text": "10 August 1996", "score": 0}
+      ]
     },
     {
-      'questionText': 'What is the largest planet in our solar system?',
-      'answers': [
-        {'text': 'Earth', 'score': 0},
-        {'text': 'Jupiter', 'score': 1},
-        {'text': 'Mars', 'score': 0},
-        {'text': 'Venus', 'score': 0},
-      ],
+      "questionText":
+          "After the commencement date person commenced to carrying out development which requires permission, then he shall within _____ from date of publication of DC rules in OG make an application to Authority for assessment of DC payable.",
+      "answers": [
+        {"text": "30 days", "score": 0},
+        {"text": "60 days", "score": 0},
+        {"text": "90 days", "score": 1},
+        {"text": "6 months", "score": 0}
+      ]
     },
     {
-      'questionText': 'What is the chemical symbol for water?',
-      'answers': [
-        {'text': 'O2', 'score': 0},
-        {'text': 'H2O', 'score': 1},
-        {'text': 'CO2', 'score': 0},
-        {'text': 'NaCl', 'score': 0},
-      ],
-    },
+      "questionText":
+          "In which form application for assessment and recovery of development charges are made?",
+      "answers": [
+        {"text": "Form A", "score": 1},
+        {"text": "Form B", "score": 0},
+        {"text": "Form 2", "score": 0},
+        {"text": "Form 3", "score": 0}
+      ]
+    }
   ];
 
   int _questionIndex = 0;
@@ -117,12 +138,15 @@ class _QuizScreenState extends State<questions> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
-              ...(_questions[_questionIndex]['answers'] as List<Map<String, Object>>).map((answer) {
+              ...(_questions[_questionIndex]['answers']
+                      as List<Map<String, Object>>)
+                  .map((answer) {
                 return Container(
                   margin: EdgeInsets.symmetric(vertical: 5),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                       textStyle: TextStyle(fontSize: 18),
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
@@ -149,8 +173,12 @@ class _QuizScreenState extends State<questions> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: _questionIndex < _questions.length - 1 ? () => _answerQuestion(0) : _resetQuiz,
-                    child: Text(_questionIndex < _questions.length - 1 ? 'Next' : 'Submit'),
+                    onPressed: _questionIndex < _questions.length - 1
+                        ? () => _answerQuestion(0)
+                        : _resetQuiz,
+                    child: Text(_questionIndex < _questions.length - 1
+                        ? 'Next'
+                        : 'Submit'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
                       foregroundColor: Colors.white,
@@ -161,7 +189,8 @@ class _QuizScreenState extends State<questions> {
               SizedBox(height: 20),
               Text(
                 'ATP Aspirants',
-                style: TextStyle(color: Colors.purple, decoration: TextDecoration.underline),
+                style: TextStyle(
+                    color: Colors.purple, decoration: TextDecoration.underline),
               ),
             ] else ...[
               Center(
